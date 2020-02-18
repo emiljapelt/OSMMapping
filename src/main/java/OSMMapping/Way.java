@@ -3,12 +3,18 @@ package OSMMapping;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.LongSupplier;
 
-public class Way{
-
+public class Way implements LongSupplier {
+    long id;
     private ArrayList<Node> nodes;
 
     public Way(){
+        nodes = new ArrayList<>();
+    }
+
+    public Way(long id){
+        this.id = id;
         nodes = new ArrayList<>();
     }
 
@@ -54,5 +60,10 @@ public class Way{
             throw new IllegalArgumentException("Cannot merge unconnected OSMWays");
         }
         return result;
+    }
+
+    @Override
+    public long getAsLong() {
+        return id;
     }
 }

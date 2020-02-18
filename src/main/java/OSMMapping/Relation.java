@@ -1,15 +1,24 @@
 package OSMMapping;
 
 import java.util.ArrayList;
+import java.util.function.LongSupplier;
 
-public class Relation{
-
+public class Relation implements LongSupplier {
+    private long id;
     private ArrayList<Node> nodes;
     private ArrayList<Way> ways;
     private ArrayList<Long> ids;
     private ArrayList<Relation> relations;
 
     public Relation(){
+        nodes = new ArrayList<>();
+        ways = new ArrayList<>();
+        relations = new ArrayList<>();
+        ids = new ArrayList<>();
+    }
+
+    public Relation(long id){
+        this.id = id;
         nodes = new ArrayList<>();
         ways = new ArrayList<>();
         relations = new ArrayList<>();
@@ -26,5 +35,10 @@ public class Relation{
 
     public void nullifyIds(){
         ids = null;
+    }
+
+    @Override
+    public long getAsLong() {
+        return id;
     }
 }

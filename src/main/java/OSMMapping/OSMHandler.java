@@ -5,6 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OSMHandler extends DefaultHandler {
@@ -13,23 +14,26 @@ public class OSMHandler extends DefaultHandler {
     private ArrayList<Drawable> coastlines;
     private ArrayList<Drawable> highways;
 
-    private HashMap<Long, Node> tempNodes;
-    private HashMap<Long, Way> tempWays;
-    private HashMap<Long, Relation> tempRelations;
+    private Map<Type, List<Drawable>> enumMap;
+
+    private SortedArrayList<Node> tempNodes;
+    private SortedArrayList<Way> tempWays;
+    private SortedArrayList<Relation> tempRelations;
     private HashMap<Node, Way> tempCoastlines;
     private Bound tempBound;
 
-    private Node nodeHolder;
     private Way wayHolder;
     private Relation relationHolder;
 
     private long currentID;
 
     public OSMHandler(){
-        tempNodes = new HashMap<>();
-        tempWays = new HashMap<>();
-        tempRelations = new HashMap<>();
+        tempNodes = new SortedArrayList<>();
+        tempWays = new SortedArrayList<>();
+        tempRelations = new SortedArrayList<>();
         tempCoastlines = new HashMap<>();
+
+        enumMap = new HashMap<>();
 
         buildings = new ArrayList<>();
         coastlines = new ArrayList<>();
@@ -49,13 +53,13 @@ public class OSMHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         switch (qName){
             case "bounds":
-                float tempMaxLat = -Float.parseFloat(attributes.getValue("maxlat"));
-                float tempMinLat = -Float.parseFloat(attributes.getValue("minlat"));
+                float tempMaxLat = Float.parseFloat(attributes.getValue("maxlat"));
+                float tempMinLat = Float.parseFloat(attributes.getValue("minlat"));
                 float tempMinLon = Float.parseFloat(attributes.getValue("minlon"));
                 float tempMaxLon = Float.parseFloat(attributes.getValue("maxlon"));
                 tempBound = new Bound(
-                        tempMaxLat,
-                        tempMinLat,
+                        -tempMaxLat,
+                        -tempMinLat,
                         (float) Math.cos(tempMinLat*Math.PI/180) * tempMinLon,
                         (float) Math.cos(tempMaxLat*Math.PI/180) * tempMaxLon
                 );
@@ -63,10 +67,9 @@ public class OSMHandler extends DefaultHandler {
             case "node":
                 currentID = Long.parseLong(attributes.getValue("id"));
                 float tempLon = Float.parseFloat(attributes.getValue("lon"));
-                float tempLat = -Float.parseFloat(attributes.getValue("lat"));
-                Node node = new Node((float) Math.cos(tempLat*Math.PI/180) * tempLon, tempLat);
-                nodeHolder = node;
-                tempNodes.put(currentID, node);
+                float tempLat = Float.parseFloat(attributes.getValue("lat"));
+                Node node = new Node(currentID, (float) Math.cos(tempLat*Math.PI/180) * tempLon, -tempLat);
+                tempNodes.add(node);
                 break;
             case "way":
                 building = false;
@@ -74,6 +77,7 @@ public class OSMHandler extends DefaultHandler {
                 highway = false;
                 currentID = Long.parseLong(attributes.getValue("id"));
                 wayHolder = new Way();
+                tempWays.add(wayHolder);
                 break;
             case "relation":
                 building = false;
@@ -90,7 +94,10 @@ public class OSMHandler extends DefaultHandler {
                 if (k != null && k.equals("highway")) highway = true;
                 break;
             case "nd":
-                wayHolder.addNode(tempNodes.get(Long.parseLong(attributes.getValue("ref"))));
+                long ref = Long.parseLong(attributes.getValue("ref"));
+                if(wayHolder != null) {
+                   if(tempNodes.get(ref) != null) wayHolder.addNode(tempNodes.get(ref));
+                }
                 break;
             case "member":
                 switch(attributes.getValue("type")){
@@ -98,7 +105,9 @@ public class OSMHandler extends DefaultHandler {
                         relationHolder.addNode(tempNodes.get(Long.parseLong(attributes.getValue("ref"))));
                         break;
                     case "way":
-                        relationHolder.addWay(tempWays.get(Long.parseLong(attributes.getValue("ref"))));
+                        long memberRef = Long.parseLong(attributes.getValue("ref"));
+                        if (tempWays.get(memberRef) != null)
+                            relationHolder.addWay(tempWays.get(memberRef));
                         break;
                     case "relation":
                         relationHolder.addRefId(Long.parseLong(attributes.getValue("ref")));
@@ -112,7 +121,7 @@ public class OSMHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
             case "way":
-                tempWays.put(currentID, wayHolder);
+                if (wayHolder.getNodes().size() == 0) break;
                 if(coastline){
                     Way before = tempCoastlines.remove(wayHolder.first());
                     if (before != null) {
@@ -132,21 +141,13 @@ public class OSMHandler extends DefaultHandler {
                 if(highway) highways.add(new Highway(wayHolder));
                 break;
             case "relation":
-                tempRelations.put(currentID, relationHolder);
+                tempRelations.add(relationHolder);
                 if(building) buildings.add(new Building(relationHolder));
                 break;
             case "osm":
-                for (Map.Entry<Long, Relation> entry : tempRelations.entrySet()) {
-                    Relation rel = entry.getValue();
-                    ArrayList<Long> relIds = rel.getIds();
-                    for(Long id : relIds){
-                        rel.addRelation(tempRelations.get(id));
-                    }
-                    rel.nullifyIds();
-                }
                 for (Map.Entry<Node, Way> entry : tempCoastlines.entrySet()) {
                     if (entry.getKey() == entry.getValue().last()) {
-                        coastlines.add(new Coastline((entry.getValue())));
+                        coastlines.add(new Coastline(entry.getValue()));
                     }
                 }
                 break;
