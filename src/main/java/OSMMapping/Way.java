@@ -1,0 +1,58 @@
+package OSMMapping;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Way{
+
+    private ArrayList<Node> nodes;
+
+    public Way(){
+        nodes = new ArrayList<>();
+    }
+
+    public void addNode(Node node){
+        nodes.add(node);
+    }
+
+    public ArrayList getNodes(){
+        return nodes;
+    }
+
+    public Node first(){
+        return nodes.get(0);
+    }
+    public Node last(){
+        return nodes.get(nodes.size()-1);
+    }
+
+    public static Way merge(Way before, Way after){
+        if (before == null) return after;
+        if (after == null) return before;
+        Way result = new Way();
+        if (before.first() == after.first()) {
+            result.nodes.addAll(before.nodes);
+            Collections.reverse((List<?>) result);
+            result.nodes.remove(result.nodes.size() - 1);
+            result.nodes.addAll(after.nodes);
+        } else if (before.first() == after.last()) {
+            result.nodes.addAll(after.nodes);
+            result.nodes.remove(result.nodes.size() - 1);
+            result.nodes.addAll(before.nodes);
+        } else if (before.last() == after.first()) {
+            result.nodes.addAll(before.nodes);
+            result.nodes.remove(result.nodes.size() - 1);
+            result.nodes.addAll(after.nodes);
+        } else if (before.last() == after.last()) {
+            ArrayList<Node> tmp = new ArrayList<>(after.nodes);
+            Collections.reverse(tmp);
+            result.nodes.addAll(before.nodes);
+            result.nodes.remove(result.nodes.size() - 1);
+            result.nodes.addAll(tmp);
+        } else {
+            throw new IllegalArgumentException("Cannot merge unconnected OSMWays");
+        }
+        return result;
+    }
+}
