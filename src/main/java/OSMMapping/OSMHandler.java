@@ -10,9 +10,7 @@ import java.util.Map;
 
 public class OSMHandler extends DefaultHandler {
 
-    private ArrayList<Drawable> buildings;
     private ArrayList<Drawable> coastlines;
-    private ArrayList<Drawable> highways;
 
     private Map<Type, List<Drawable>> enumMap;
 
@@ -35,19 +33,14 @@ public class OSMHandler extends DefaultHandler {
 
         enumMap = new HashMap<>();
 
-        buildings = new ArrayList<>();
         coastlines = new ArrayList<>();
-        highways = new ArrayList<>();
     }
 
-    public ArrayList<Drawable> getBuildings() {return buildings;}
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
-    public ArrayList<Drawable> getHighways(){return highways;}
     public Bound getTempBound(){return tempBound;}
+    public Map<Type, List<Drawable>> getEnumMap(){return enumMap;}
 
-    private boolean building;
-    private boolean coastline;
-    private boolean highway;
+    Type type = Type.UNKNOWN;
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -72,26 +65,59 @@ public class OSMHandler extends DefaultHandler {
                 tempNodes.add(node);
                 break;
             case "way":
-                building = false;
-                coastline = false;
-                highway = false;
                 currentID = Long.parseLong(attributes.getValue("id"));
-                wayHolder = new Way();
+                wayHolder = new Way(currentID);
                 tempWays.add(wayHolder);
+                type = Type.UNKNOWN;
                 break;
             case "relation":
-                building = false;
-                coastline = false;
-                highway = false;
                 currentID = Long.parseLong(attributes.getValue("id"));
                 relationHolder = new Relation();
+                type = Type.UNKNOWN;
+                break;
             case "tag":
                 String k = attributes.getValue("k");
                 String v = attributes.getValue("v");
 
-                if (k != null && k.equals("building")) building = true;
-                if (k != null && k.equals("natural") && v.equals("coastline")) coastline = true;
-                if (k != null && k.equals("highway")) highway = true;
+                switch (k){
+                    case "building":
+                        type = Type.BUILDING;
+                        break;
+                    case "natural":
+                        switch (v){
+                            case "coastline":
+                                type = Type.COASTLINE;
+                                break;
+                            case "water":
+                                type = Type.WATER;
+                                break;
+                            case "beach":
+                                type = Type.BEACH;
+                                break;
+                            case "wood":
+                                type = Type.FOREST;
+                                break;
+                        }
+                        break;
+                    case "waterway":
+                        type = Type.WATERWAY;
+                        break;
+                    case "landuse":
+                        switch (v){
+                            case "meadow":
+                            case "forest":
+                            case "wood":
+                                type = Type.FOREST;
+                                break;
+                            case "farmland":
+                                type = Type.FARMFIELD;
+                                break;
+                        }
+                        break;
+                    case "highway":
+                        type = Type.HIGHWAY;
+                        break;
+                }
                 break;
             case "nd":
                 long ref = Long.parseLong(attributes.getValue("ref"));
@@ -121,8 +147,10 @@ public class OSMHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
             case "way":
-                if (wayHolder.getNodes().size() == 0) break;
-                if(coastline){
+                if(type != Type.COASTLINE) {
+                    if(!enumMap.containsKey(type)) enumMap.put(type, new ArrayList<>());
+                    enumMap.get(type).add(new LinePath(wayHolder, type));
+                } else {
                     Way before = tempCoastlines.remove(wayHolder.first());
                     if (before != null) {
                         tempCoastlines.remove(before.first());
@@ -137,17 +165,19 @@ public class OSMHandler extends DefaultHandler {
                     tempCoastlines.put(wayHolder.first(), wayHolder);
                     tempCoastlines.put(wayHolder.last(), wayHolder);
                 }
-                if(building) buildings.add(new Building(wayHolder));
-                if(highway) highways.add(new Highway(wayHolder));
+                type = Type.UNKNOWN;
                 break;
             case "relation":
-                tempRelations.add(relationHolder);
-                if(building) buildings.add(new Building(relationHolder));
+                if(type != Type.UNKNOWN && type != Type.COASTLINE){
+                    if(!enumMap.containsKey(type)) enumMap.put(type, new ArrayList<>());
+                    enumMap.get(type).add(new PolyLinePath(relationHolder, type));
+                }
+                type = Type.UNKNOWN;
                 break;
             case "osm":
                 for (Map.Entry<Node, Way> entry : tempCoastlines.entrySet()) {
                     if (entry.getKey() == entry.getValue().last()) {
-                        coastlines.add(new Coastline(entry.getValue()));
+                        coastlines.add(new LinePath(entry.getValue(), Type.COASTLINE));
                     }
                 }
                 break;

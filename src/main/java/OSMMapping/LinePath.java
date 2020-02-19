@@ -7,15 +7,19 @@ import java.util.ArrayList;
 public class LinePath implements Drawable{
 
     float[] coordinates;
+    Type type;
 
-    public LinePath(Way way){
+    public LinePath(Way way, Type type){
         ArrayList<Node> nodes = way.getNodes();
         coordinates = new float[nodes.size() * 2];
         for(int i = 0; i < nodes.size(); i++){
             coordinates[i*2] = nodes.get(i).getLon();
             coordinates[i*2+1] = nodes.get(i).getLat();
         }
+        this.type = type;
     }
+
+    public Type getType(){ return type; }
 
     @Override
     public void draw(GraphicsContext gc) {

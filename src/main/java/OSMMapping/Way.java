@@ -2,11 +2,10 @@ package OSMMapping;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.function.LongSupplier;
 
 public class Way implements LongSupplier {
-    long id;
+    private long id;
     private ArrayList<Node> nodes;
 
     public Way(){
@@ -39,7 +38,7 @@ public class Way implements LongSupplier {
         Way result = new Way();
         if (before.first() == after.first()) {
             result.nodes.addAll(before.nodes);
-            Collections.reverse((List<?>) result);
+            Collections.reverse(result.getNodes());
             result.nodes.remove(result.nodes.size() - 1);
             result.nodes.addAll(after.nodes);
         } else if (before.first() == after.last()) {

@@ -6,6 +6,7 @@ import javafx.scene.shape.FillRule;
 import javafx.scene.transform.Affine;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapPainter {
 
@@ -25,9 +26,7 @@ public class MapPainter {
     public void paintMap(float lineWidth){
 
         this.lineWidth = lineWidth;
-        ArrayList<Drawable> buildings = model.getBuildings();
         ArrayList<Drawable> coastlines = model.getCoastlines();
-        ArrayList<Drawable> highways = model.getHighways();
 
         gc.setTransform(new Affine());
         gc.setLineWidth(lineWidth);
@@ -36,17 +35,36 @@ public class MapPainter {
         gc.setTransform(transform);
 
         model.getMapBound().draw(gc);
+        gc.setFill(Type.getColor(Type.COASTLINE));
         for(Drawable coastline : coastlines){
             coastline.draw(gc);
+            gc.fill();
         }
-        for(Drawable highway : highways){
-            highway.draw(gc);
-        }
-        gc.setFillRule(FillRule.EVEN_ODD);
-        for(Drawable building : buildings){
-            building.draw(gc);
+
+        paintDrawables(model.getDrawablesOfType(Type.BEACH), true, lineWidth);
+        paintDrawables(model.getDrawablesOfType(Type.FOREST), true, lineWidth);
+        paintDrawables(model.getDrawablesOfType(Type.FARMFIELD), true, lineWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.WATERWAY), false, lineWidth);
+        paintDrawables(model.getDrawablesOfType(Type.WATER), true, lineWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, lineWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.BUILDING), true, lineWidth);
+    }
+
+    public void paintDrawables(List<Drawable> drawables, boolean fill, double linewidth){
+        if (drawables.size() != 0) {
+            Type type = drawables.get(0).getType();
+            gc.setStroke(Type.getColor(type));
+            if (fill) gc.setFill(Type.getColor(type));
+            for (Drawable drawable : drawables) {
+                drawable.draw(gc);
+                if (fill) gc.fill();
+            }
         }
     }
 }
 
 //TODO Make MapPainter only paint elements that are within the viewBound.
+//TODO fix linewidth consistensy

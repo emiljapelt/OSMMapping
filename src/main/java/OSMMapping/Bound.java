@@ -43,4 +43,6 @@ public class Bound implements Drawable{
     public double getMaxLat(){return maxLat;}
     public double getMinLon(){return minLon;}
     public double getMaxLon(){return maxLon;}
+
+    public Type getType(){return Type.UNKNOWN;}
 }

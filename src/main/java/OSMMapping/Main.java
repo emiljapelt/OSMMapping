@@ -100,6 +100,7 @@ public class Main extends Application {
     public Bound getViewBound(){return viewBound;}
 
     public void paintMap() {
+        System.out.println("*");
         painter.paintMap(lineWidth);
     }
 
@@ -119,7 +120,6 @@ public class Main extends Application {
     public void resetView() {
         move(-model.getMapBound().getMinLon(), -model.getMapBound().getMinLat());
         zoom(mapCanvas.getWidth() / (model.getMapBound().getMaxLat() - model.getMapBound().getMinLat()), 0, 0);
-        paintMap();
     }
 
     public void updateViewBound(){
