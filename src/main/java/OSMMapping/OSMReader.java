@@ -2,7 +2,6 @@ package OSMMapping;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;

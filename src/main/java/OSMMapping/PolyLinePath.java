@@ -1,7 +1,6 @@
 package OSMMapping;
 
 import javafx.scene.canvas.GraphicsContext;
-
 import java.util.ArrayList;
 
 public class PolyLinePath implements Drawable{

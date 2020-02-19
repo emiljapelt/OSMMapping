@@ -48,6 +48,7 @@ public class MapPainter {
 
         paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, lineWidth);
 
+        gc.setFillRule(FillRule.EVEN_ODD);
         paintDrawables(model.getDrawablesOfType(Type.BUILDING), true, lineWidth);
     }
 
