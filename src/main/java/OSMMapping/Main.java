@@ -48,21 +48,14 @@ public class Main extends Application {
         model.addObserver(this::paintMap);
         controller = new Controller(this, model);
 
+        lineWidth = (float) (1 / transform.getMxx());
+
         painter = new MapPainter(this, model, gc, transform);
 
         resetView();
 
-        lineWidth = (float) (1 / transform.getMxx());
-
         primStage = primaryStage;
-        mapCanvas.widthProperty().bind(primStage.widthProperty());
-        mapCanvas.heightProperty().bind(primStage.heightProperty());
-        mapCanvas.widthProperty().addListener((a,b,c) -> {
-            paintMap();
-        });
-        mapCanvas.widthProperty().addListener((a,b,c) -> {
-            paintMap();
-        });
+
         viewBound = new Bound(
                 getModelCoordinates(primaryStage.getMaxWidth(), primaryStage.getMaxHeight()),
                 getModelCoordinates(primaryStage.getMinWidth(), primaryStage.getMinHeight())
@@ -86,6 +79,15 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, windowSizeX, windowSizeY));
         primaryStage.show();
 
+        mapCanvas.widthProperty().bind(primStage.widthProperty());
+        mapCanvas.heightProperty().bind(primStage.heightProperty());
+        mapCanvas.widthProperty().addListener((a,b,c) -> {
+            paintMap();
+        });
+        mapCanvas.heightProperty().addListener((a,b,c) -> {
+            paintMap();
+        });
+
         long time = -System.nanoTime();
         painter.paintMap(lineWidth);
         time += System.nanoTime();
@@ -108,13 +110,11 @@ public class Main extends Application {
         transform.prependScale(factor, factor, x, y);
         lineWidth = (float) (1 / transform.getMxx());
         //updateViewBound();
-        paintMap();
     }
 
     public void move(double x, double y){
         transform.prependTranslation(x, y);
         //updateViewBound();
-        paintMap();
     }
 
     public void resetView() {

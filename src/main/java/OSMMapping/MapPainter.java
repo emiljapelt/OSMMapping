@@ -14,7 +14,6 @@ public class MapPainter {
     private OSMModel model;
     private GraphicsContext gc;
     private Affine transform;
-    private float lineWidth;
 
     public MapPainter(Main main, OSMModel model, GraphicsContext gc, Affine transform){
         this.main = main;
@@ -25,7 +24,6 @@ public class MapPainter {
 
     public void paintMap(float lineWidth){
 
-        this.lineWidth = lineWidth;
         ArrayList<Drawable> coastlines = model.getCoastlines();
 
         gc.setTransform(new Affine());
