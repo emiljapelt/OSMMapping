@@ -22,12 +22,11 @@ public class MapPainter {
         this.transform = transform;
     }
 
-    public void paintMap(float lineWidth){
+    public void paintMap(){
 
         ArrayList<Drawable> coastlines = model.getCoastlines();
 
         gc.setTransform(new Affine());
-        gc.setLineWidth(lineWidth);
         gc.setFill(Color.AQUA);
         gc.fillRect(0, 0, main.getMapCanvas().getWidth(), main.getMapCanvas().getHeight());
         gc.setTransform(transform);
@@ -39,20 +38,24 @@ public class MapPainter {
             gc.fill();
         }
 
-        paintDrawables(model.getDrawablesOfType(Type.BEACH), true, lineWidth);
-        paintDrawables(model.getDrawablesOfType(Type.FOREST), true, lineWidth);
-        paintDrawables(model.getDrawablesOfType(Type.FARMFIELD), true, lineWidth);
-
-        paintDrawables(model.getDrawablesOfType(Type.WATERWAY), false, lineWidth);
-        paintDrawables(model.getDrawablesOfType(Type.WATER), true, lineWidth);
-
-        paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, lineWidth);
-
+        double pixelWidth = 1/Math.sqrt(Math.abs(transform.determinant()));
+        gc.setLineWidth(pixelWidth);
         gc.setFillRule(FillRule.EVEN_ODD);
-        paintDrawables(model.getDrawablesOfType(Type.BUILDING), true, lineWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.BEACH), true, pixelWidth);
+        paintDrawables(model.getDrawablesOfType(Type.FOREST), true, pixelWidth);
+        paintDrawables(model.getDrawablesOfType(Type.FARMFIELD), true, pixelWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.WATERWAY), false, pixelWidth);
+        paintDrawables(model.getDrawablesOfType(Type.WATER), true, pixelWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, 2* pixelWidth);
+
+        paintDrawables(model.getDrawablesOfType(Type.BUILDING), true, pixelWidth);
     }
 
-    public void paintDrawables(List<Drawable> drawables, boolean fill, double linewidth){
+    private void paintDrawables(List<Drawable> drawables, boolean fill, double lineWidth){
+        gc.setLineWidth(lineWidth);
         if (drawables.size() != 0) {
             Type type = drawables.get(0).getType();
             gc.setStroke(Type.getColor(type));
@@ -66,4 +69,3 @@ public class MapPainter {
 }
 
 //TODO Make MapPainter only paint elements that are within the viewBound.
-//TODO fix linewidth consistensy

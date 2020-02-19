@@ -47,8 +47,6 @@ public class Main extends Application {
         model.addObserver(this::paintMap);
         controller = new Controller(this, model);
 
-        lineWidth = (float) (1 / transform.getMxx());
-
         painter = new MapPainter(this, model, gc, transform);
 
         resetView();
@@ -74,10 +72,6 @@ public class Main extends Application {
         root.getChildren().add(mapCanvas);
         root.getChildren().add(input);
 
-        primaryStage.setTitle("OSMMapper");
-        primaryStage.setScene(new Scene(root, windowSizeX, windowSizeY));
-        primaryStage.show();
-
         mapCanvas.widthProperty().bind(primStage.widthProperty());
         mapCanvas.heightProperty().bind(primStage.heightProperty());
         mapCanvas.widthProperty().addListener((a,b,c) -> {
@@ -88,9 +82,13 @@ public class Main extends Application {
         });
 
         long time = -System.nanoTime();
-        painter.paintMap(lineWidth);
+        paintMap();
         time += System.nanoTime();
         System.out.println("Paint time: " + ((time)/1000000) + "ms");
+
+        primaryStage.setTitle("OSMMapper");
+        primaryStage.setScene(new Scene(root, windowSizeX, windowSizeY));
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
@@ -101,8 +99,7 @@ public class Main extends Application {
     public Bound getViewBound(){return viewBound;}
 
     public void paintMap() {
-        System.out.println("*");
-        painter.paintMap(lineWidth);
+        painter.paintMap();
     }
 
     public void zoom(double factor, double x, double y) {
@@ -140,4 +137,3 @@ public class Main extends Application {
 
 //TODO Optimize, to reduce lag. Detail levels on zoom levels, only render what is nearly in view.
 //TODO Rework Reader-Handler system
-//TODO Mercatorprojektion https://da.wikipedia.org/wiki/Mercatorprojektion
