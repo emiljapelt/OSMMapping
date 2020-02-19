@@ -31,10 +31,10 @@ public class MapPainter {
         gc.fillRect(0, 0, main.getMapCanvas().getWidth(), main.getMapCanvas().getHeight());
         gc.setTransform(transform);
 
-        model.getMapBound().draw(gc);
+        model.getMapBound().draw(gc, transform.getMxx());
         gc.setFill(Type.getColor(Type.COASTLINE));
         for(Drawable coastline : coastlines){
-            coastline.draw(gc);
+            coastline.draw(gc, transform.getMxx());
             gc.fill();
         }
 
@@ -61,7 +61,7 @@ public class MapPainter {
             gc.setStroke(Type.getColor(type));
             if (fill) gc.setFill(Type.getColor(type));
             for (Drawable drawable : drawables) {
-                drawable.draw(gc);
+                drawable.draw(gc, transform.getMxx());
                 if (fill) gc.fill();
             }
         }

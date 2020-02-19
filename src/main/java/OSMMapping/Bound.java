@@ -29,7 +29,7 @@ public class Bound implements Drawable{
         this.maxLon = (float) maxs.getY();
     }
 
-    public void draw(GraphicsContext gc){
+    public void draw(GraphicsContext gc, double scale){
         gc.beginPath();
         gc.moveTo(minLon,maxLat);
         gc.lineTo(maxLon,maxLat);

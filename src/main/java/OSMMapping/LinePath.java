@@ -21,16 +21,20 @@ public class LinePath implements Drawable{
     public Type getType(){ return type; }
 
     @Override
-    public void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc, double scale) {
         gc.beginPath();
-        trace(gc);
+        trace(gc, scale);
         gc.stroke();
     }
 
-    public void trace(GraphicsContext gc){
+    public void trace(GraphicsContext gc, double scale){
         gc.moveTo(coordinates[0], coordinates[1]);
         for (int i = 2 ; i < coordinates.length ; i += 2) {
-            gc.lineTo(coordinates[i], coordinates[i+1]);
+            //TODO review size check
+            if( 1 < scale * Math.sqrt(Math.pow((coordinates[i] - coordinates[i-2]),2) + Math.pow((coordinates[i+1] - coordinates[i-1]),2))) {
+                gc.lineTo(coordinates[i], coordinates[i + 1]);
+            }
+
         }
     }
 }

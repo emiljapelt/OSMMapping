@@ -3,7 +3,7 @@ package OSMMapping;
 import javafx.scene.canvas.GraphicsContext;
 
 public interface Drawable {
-    void draw(GraphicsContext gc);
+    void draw(GraphicsContext gc, double scale);
 
     Type getType();
 }

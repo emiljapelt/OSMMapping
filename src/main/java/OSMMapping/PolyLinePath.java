@@ -18,10 +18,10 @@ public class PolyLinePath implements Drawable{
     public Type getType(){return type;}
 
     @Override
-    public void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc, double scale) {
         gc.beginPath();
         for(LinePath linePath : ways){
-            linePath.trace(gc);
+            linePath.trace(gc, scale);
         }
         gc.stroke();
     }
