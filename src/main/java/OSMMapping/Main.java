@@ -38,7 +38,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        String mapFileLocation = "src/main/resources/faroe-islands-latest.osm";
+        String mapFileLocation = "src/main/resources/isle-of-man-latest.osm";
 
         mapCanvas = new Canvas(windowSizeX, windowSizeY);
         gc = mapCanvas.getGraphicsContext2D();
