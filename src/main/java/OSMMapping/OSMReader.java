@@ -15,6 +15,7 @@ public class OSMReader {
     private ArrayList<Drawable> coastlines;
 
     private Map<Type, List<Drawable>> enumMap;
+    private ArrayList<Address> addresses;
 
     private SortedArrayList<Node> tempNodes;
     private SortedArrayList<Way> tempWays;
@@ -32,6 +33,7 @@ public class OSMReader {
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
     public Bound getTempBound(){return tempBound;}
     public Map<Type, List<Drawable>> getEnumMap(){return enumMap;}
+    public ArrayList<Address> getAddresses(){return addresses;}
 
     public OSMReader(InputStream inputStream){
 
@@ -41,6 +43,8 @@ public class OSMReader {
         tempCoastlines = new HashMap<>();
 
         enumMap = new HashMap<>();
+        addresses = new ArrayList<>();
+        String[] addressInfo = new String[4];
 
         coastlines = new ArrayList<>();
 
@@ -73,6 +77,7 @@ public class OSMReader {
                                 float tempLat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                                 Node node = new Node(currentID, (float) Math.cos(tempLat*Math.PI/180) * tempLon, -tempLat);
                                 tempNodes.add(node);
+                                addressInfo = new String[4];
                                 break;
                             case "way":
                                 currentID = Long.parseLong(reader.getAttributeValue(null, "id"));
@@ -90,6 +95,21 @@ public class OSMReader {
                                 String v = reader.getAttributeValue(null, "v");
 
                                 switch (k){
+                                    case "addr:city":
+                                        addressInfo[0] = v;
+                                        break;
+                                    case "addr:postcode":
+                                        addressInfo[1] = v;
+                                        break;
+                                    case "addr:street":
+                                        addressInfo[2] = v;
+                                        break;
+                                    case "addr:housenumber":
+                                        addressInfo[3] = v;
+                                        if (addressInfoIsFull(addressInfo)) {
+                                            addresses.add(new Address(tempNodes.get(currentID), addressInfo));
+                                        }
+                                        break;
                                     case "building":
                                         type = Type.BUILDING;
                                         break;
@@ -197,5 +217,12 @@ public class OSMReader {
         } catch (XMLStreamException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean addressInfoIsFull(String[] addressInfo){
+        for(String info : addressInfo){
+            if (info == null) return false;
+        }
+        return true;
     }
 }

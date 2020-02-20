@@ -3,9 +3,11 @@ package OSMMapping;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -45,6 +47,15 @@ public class Main extends Application {
         mapCanvas = new Canvas(windowSizeX, windowSizeY);
         gc = mapCanvas.getGraphicsContext2D();
 
+        searchField = new VBox();
+        input = new TextField();
+        input.setMaxWidth(200);
+        input.setMinWidth(100);
+        input.setMaxHeight(30);
+        input.setMinHeight(20);
+        suggestions = new VBox();
+        searchField.getChildren().addAll(input, suggestions);
+
         model = new OSMModel(inputStream);
         model.addObserver(this::paintMap);
         controller = new Controller(this, model);
@@ -60,19 +71,11 @@ public class Main extends Application {
                 getModelCoordinates(primaryStage.getMinWidth(), primaryStage.getMinHeight())
         );
 
-        searchField = new VBox();
-        input = new TextField();
-        input.setMaxWidth(200);
-        input.setMinWidth(100);
-        input.setMaxHeight(30);
-        input.setMinHeight(20);
-        suggestions = new VBox();
-        searchField.getChildren().addAll(input,suggestions);
-
         root = new StackPane();
-        root.setAlignment(input, Pos.TOP_LEFT);
         root.getChildren().add(mapCanvas);
-        root.getChildren().add(input);
+        searchField.setPickOnBounds(false);
+        root.getChildren().add(searchField);
+        root.setAlignment(searchField, Pos.TOP_LEFT);
 
         mapCanvas.widthProperty().bind(primStage.widthProperty());
         mapCanvas.heightProperty().bind(primStage.heightProperty());
@@ -99,6 +102,8 @@ public class Main extends Application {
 
     public Canvas getMapCanvas(){return mapCanvas;}
     public Bound getViewBound(){return viewBound;}
+    public TextField getInput(){return input;}
+    public VBox getSuggestions(){return suggestions;}
 
     public void paintMap() {
         painter.paintMap();

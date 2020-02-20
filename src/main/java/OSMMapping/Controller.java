@@ -1,6 +1,7 @@
 package OSMMapping;
 
 import javafx.geometry.Point2D;
+import javafx.scene.control.Label;
 
 public class Controller {
     private Main main;
@@ -25,6 +26,24 @@ public class Controller {
             double factor = Math.pow(1.001, e.getDeltaY());
             main.zoom(factor, e.getX(), e.getY());
             main.paintMap();
+        });
+
+        main.getInput().setOnKeyReleased(e -> {
+            main.getSuggestions().getChildren().clear();
+            if(main.getInput().getText() == "") main.getSuggestions().getChildren().clear();
+            else {
+                for (Address address : model.getAddresses()) {
+                    String addressText = address.toString();
+                    if(addressText.toLowerCase().startsWith(main.getInput().getText().toLowerCase())){
+                        Label label = new Label(addressText);
+                        label.setOnMouseClicked(a -> {
+                            main.getInput().setText(addressText);
+                            main.getSuggestions().getChildren().clear();
+                        });
+                        main.getSuggestions().getChildren().add(label);
+                    }
+                }
+            }
         });
     }
 }
