@@ -1,36 +1,30 @@
 package OSMMapping;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class OSMModel {
 
-    private ArrayList<Drawable> buildings;
     private ArrayList<Drawable> coastlines;
-    private ArrayList<Drawable> highways;
-
     private Map<Type, List<Drawable>> enumMap;
-
-    private ArrayList<Runnable> observers = new ArrayList<>();
     private Bound mapBound;
 
-    public OSMModel(String mapFileLocation){
-        System.out.println("***" + mapFileLocation);
+    private ArrayList<Runnable> observers = new ArrayList<>();
+
+    public OSMModel(InputStream is){
         long time = -System.nanoTime();
-        OSMReader reader = new OSMReader(mapFileLocation);
+        OSMReader reader = new OSMReader(is);
         time += System.nanoTime();
         System.out.println("Read time: " + ((time)/1000000) + "ms");
 
-        OSMHandler handler = reader.getHandler();
-        coastlines = handler.getCoastlines();
-        mapBound = handler.getTempBound();
-        enumMap = handler.getEnumMap();
+        coastlines = reader.getCoastlines();
+        mapBound = reader.getTempBound();
+        enumMap = reader.getEnumMap();
     }
 
-    public ArrayList<Drawable> getBuildings(){return buildings;}
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
-    public ArrayList<Drawable> getHighways(){return highways;}
     public Bound getMapBound(){return mapBound;}
 
     public List<Drawable> getDrawablesOfType(Type type) {
