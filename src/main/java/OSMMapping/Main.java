@@ -13,6 +13,8 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.Stage;
 
+import java.io.InputStream;
+
 public class Main extends Application {
 
     private Controller controller;
@@ -38,12 +40,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        String mapFileLocation = "src/main/resources/isle-of-man-latest.osm";
+        InputStream is = Main.class.getClassLoader().getResourceAsStream("isle-of-man-latest.osm");
 
         mapCanvas = new Canvas(windowSizeX, windowSizeY);
         gc = mapCanvas.getGraphicsContext2D();
 
-        model = new OSMModel(mapFileLocation);
+        model = new OSMModel(is);
         model.addObserver(this::paintMap);
         controller = new Controller(this, model);
 
