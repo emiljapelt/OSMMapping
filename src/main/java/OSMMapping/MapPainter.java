@@ -49,7 +49,7 @@ public class MapPainter {
         paintDrawables(model.getDrawablesOfType(Type.WATERWAY), false, pixelWidth);
         paintDrawables(model.getDrawablesOfType(Type.WATER), true, pixelWidth);
 
-        paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, 2* pixelWidth);
+        paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, pixelWidth);
 
         paintDrawables(model.getDrawablesOfType(Type.BUILDING), true, pixelWidth);
     }
