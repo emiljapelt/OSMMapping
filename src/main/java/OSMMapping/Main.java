@@ -40,12 +40,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        InputStream input = Main.class.getClassLoader().getResourceAsStream("isle-of-man-latest.osm");
+        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("isle-of-man-latest.osm");
 
         mapCanvas = new Canvas(windowSizeX, windowSizeY);
         gc = mapCanvas.getGraphicsContext2D();
 
-        model = new OSMModel(input);
+        model = new OSMModel(inputStream);
         model.addObserver(this::paintMap);
         controller = new Controller(this, model);
 
