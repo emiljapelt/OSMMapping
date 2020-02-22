@@ -69,3 +69,4 @@ public class MapPainter {
 }
 
 //TODO Make MapPainter only paint elements that are within the viewBound.
+//TODO Make MapPainter only paint certain element type, depending on zoom level.

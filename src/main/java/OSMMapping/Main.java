@@ -153,6 +153,3 @@ public class Main extends Application {
             return transform.transform(x,y);
     }
 }
-
-//TODO Optimize, to reduce lag. Detail levels on zoom levels, only render what is nearly in view.
-//TODO Rework Reader-Handler system
