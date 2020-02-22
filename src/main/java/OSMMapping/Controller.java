@@ -28,10 +28,9 @@ public class Controller {
             main.paintMap();
         });
 
-        main.getInput().setOnKeyReleased(e -> {
+        main.getInput().setOnKeyPressed(e -> {
             main.getSuggestions().getChildren().clear();
-            if(main.getInput().getText() == "") main.getSuggestions().getChildren().clear();
-            else {
+            if(!(main.getInput().getText().equals(""))){
                 for (Address address : model.getAddresses()) {
                     String addressText = address.toString();
                     if(addressText.toLowerCase().startsWith(main.getInput().getText().toLowerCase())){
@@ -44,6 +43,18 @@ public class Controller {
                     }
                 }
             }
+        });
+
+        main.getInput().setOnAction(e -> {
+            String searchedAddress = main.getInput().getText();
+            for(Address a : model.getAddresses()){
+                if(a.toString().equals(searchedAddress)){
+                    main.zoomToNode(a.getLocation());
+
+                    break;
+                }
+            }
+            main.paintMap();
         });
     }
 }

@@ -21,6 +21,6 @@ public class Address {
     }
 
     public Node getLocation(){
-        return getLocation();
+        return location;
     }
 }

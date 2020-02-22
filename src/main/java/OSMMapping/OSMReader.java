@@ -23,6 +23,7 @@ public class OSMReader {
     private HashMap<Node, Way> tempCoastlines;
     private Bound tempBound;
 
+    private Node nodeHolder;
     private Way wayHolder;
     private Relation relationHolder;
 
@@ -75,8 +76,8 @@ public class OSMReader {
                                 currentID = Long.parseLong(reader.getAttributeValue(null, "id"));
                                 float tempLon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                                 float tempLat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
-                                Node node = new Node(currentID, (float) Math.cos(tempLat*Math.PI/180) * tempLon, -tempLat);
-                                tempNodes.add(node);
+                                nodeHolder = new Node(currentID, (float) Math.cos(tempLat*Math.PI/180) * tempLon, -tempLat);
+                                tempNodes.add(nodeHolder);
                                 addressInfo = new String[4];
                                 break;
                             case "way":
@@ -106,8 +107,15 @@ public class OSMReader {
                                         break;
                                     case "addr:housenumber":
                                         addressInfo[3] = v;
-                                        if (addressInfoIsFull(addressInfo)) {
-                                            addresses.add(new Address(tempNodes.get(currentID), addressInfo));
+                                        if (addressInfoIsFull(addressInfo)){
+                                            if(relationHolder != null){
+                                                addresses.add(new Address(relationHolder.getWays().get(0).first(), addressInfo));
+                                            }
+                                            else if(wayHolder != null){
+                                                addresses.add(new Address(wayHolder.first(), addressInfo));
+                                            } else {
+                                                addresses.add(new Address(tempNodes.get(currentID), addressInfo));
+                                            }
                                         }
                                         break;
                                     case "building":
@@ -226,3 +234,5 @@ public class OSMReader {
         return true;
     }
 }
+
+//TODO fix address loading

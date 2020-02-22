@@ -34,7 +34,6 @@ public class Main extends Application {
 
     private int windowSizeX = 900;
     private int windowSizeY = 700;
-    private float lineWidth = 1;
     private Affine transform = new Affine();
 
     private Stage primStage;
@@ -107,17 +106,26 @@ public class Main extends Application {
 
     public void paintMap() {
         painter.paintMap();
+        System.out.println("*");
     }
 
     public void zoom(double factor, double x, double y) {
         transform.prependScale(factor, factor, x, y);
-        lineWidth = (float) (1 / transform.getMxx());
         //updateViewBound();
     }
 
     public void move(double x, double y){
         transform.prependTranslation(x, y);
         //updateViewBound();
+    }
+
+    public void zoomToNode(Node node){
+        transform.setMxx(1);
+        transform.setMyy(1);
+        Point2D nodeToScreen = getScreenCoordinates(node.getLon(), node.getLat());
+        move(-nodeToScreen.getX() + primStage.getWidth()/2, -nodeToScreen.getY() + primStage.getHeight()/2);
+        zoom(80* (mapCanvas.getWidth() / (model.getMapBound().getMaxLat() - model.getMapBound().getMinLat())),primStage.getWidth()/2,primStage.getHeight()/2);
+        paintMap();
     }
 
     public void resetView() {
@@ -139,6 +147,10 @@ public class Main extends Application {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Point2D getScreenCoordinates(double x, double y){
+            return transform.transform(x,y);
     }
 }
 
