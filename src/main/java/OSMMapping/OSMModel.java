@@ -49,3 +49,4 @@ public class OSMModel {
 
 }
 
+//TODO Make addresses sorted, for better/faster searching
