@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,7 @@ public class Main extends Application {
     private VBox searchField;
     private TextField input;
     private VBox suggestions;
+    private ScrollPane suggestionScroll;
 
     private Canvas mapCanvas;
     private GraphicsContext gc;
@@ -41,7 +43,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("isle-of-man-latest.osm");
+        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("faroe-islands-latest.osm");
 
         mapCanvas = new Canvas(windowSizeX, windowSizeY);
         gc = mapCanvas.getGraphicsContext2D();
@@ -53,7 +55,13 @@ public class Main extends Application {
         input.setMaxHeight(30);
         input.setMinHeight(20);
         suggestions = new VBox();
-        searchField.getChildren().addAll(input, suggestions);
+        suggestionScroll = new ScrollPane();
+        suggestionScroll.setContent(suggestions);
+        suggestionScroll.setMaxWidth(200);
+        suggestionScroll.setMaxHeight(400);
+        suggestionScroll.setMinHeight(0);
+        suggestionScroll.setStyle("-fx-focus-color: transparent");
+        searchField.getChildren().addAll(input, suggestionScroll);
 
         model = new OSMModel(inputStream);
         model.addObserver(this::paintMap);

@@ -28,7 +28,7 @@ public class Controller {
             main.paintMap();
         });
 
-        main.getInput().setOnKeyPressed(e -> {
+        main.getInput().textProperty().addListener(e -> {
             main.getSuggestions().getChildren().clear();
             if(!(main.getInput().getText().equals(""))){
                 for (Address address : model.getAddresses()) {
@@ -50,7 +50,6 @@ public class Controller {
             for(Address a : model.getAddresses()){
                 if(a.toString().equals(searchedAddress)){
                     main.zoomToNode(a.getLocation());
-
                     break;
                 }
             }
