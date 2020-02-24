@@ -114,7 +114,6 @@ public class Main extends Application {
 
     public void paintMap() {
         painter.paintMap();
-        System.out.println("*");
     }
 
     public void zoom(double factor, double x, double y) {
