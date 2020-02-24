@@ -98,24 +98,26 @@ public class OSMReader {
                                 switch (k){
                                     case "addr:city":
                                         addressInfo[0] = v;
+                                        if (addressInfoIsFull(addressInfo) && wayHolder == null){
+                                            addresses.add(new Address(tempNodes.get(currentID), addressInfo));
+                                        }
                                         break;
                                     case "addr:postcode":
                                         addressInfo[1] = v;
+                                        if (addressInfoIsFull(addressInfo) && wayHolder == null){
+                                            addresses.add(new Address(tempNodes.get(currentID), addressInfo));
+                                        }
                                         break;
                                     case "addr:street":
                                         addressInfo[2] = v;
+                                        if (addressInfoIsFull(addressInfo) && wayHolder == null){
+                                            addresses.add(new Address(tempNodes.get(currentID), addressInfo));
+                                        }
                                         break;
                                     case "addr:housenumber":
                                         addressInfo[3] = v;
-                                        if (addressInfoIsFull(addressInfo)){
-                                            if(relationHolder != null){
-                                                addresses.add(new Address(relationHolder.getWays().get(0).first(), addressInfo));
-                                            }
-                                            else if(wayHolder != null){
-                                                addresses.add(new Address(wayHolder.first(), addressInfo));
-                                            } else {
-                                                addresses.add(new Address(tempNodes.get(currentID), addressInfo));
-                                            }
+                                        if (addressInfoIsFull(addressInfo) && wayHolder == null){
+                                            addresses.add(new Address(tempNodes.get(currentID), addressInfo));
                                         }
                                         break;
                                     case "building":
@@ -234,5 +236,3 @@ public class OSMReader {
         return true;
     }
 }
-
-//TODO fix address loading
