@@ -229,7 +229,7 @@ public class OSMReader {
         }
     }
 
-    public boolean addressInfoIsFull(String[] addressInfo){
+    private boolean addressInfoIsFull(String[] addressInfo){
         for(String info : addressInfo){
             if (info == null) return false;
         }
