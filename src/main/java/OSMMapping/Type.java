@@ -13,7 +13,8 @@ public enum Type {
     BEACH,
     FARMFIELD,
     WATERWAY,
-    WATER;
+    WATER,
+    PIN;
 
 
     public static Paint getColor(Type type) {
@@ -34,6 +35,8 @@ public enum Type {
                 return Color.SANDYBROWN;
             case FARMFIELD:
                 return Color.YELLOWGREEN;
+            case PIN:
+                return Color.RED;
             default:
                 return Color.BLACK;
         }

@@ -50,6 +50,7 @@ public class Controller {
             for(Address a : model.getAddresses()){
                 if(a.toString().equals(searchedAddress)){
                     main.zoomToNode(a.getLocation());
+                    model.setPin(a.getLocation().getLon(), a.getLocation().getLat());
                     break;
                 }
             }

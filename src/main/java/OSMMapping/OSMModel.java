@@ -11,6 +11,7 @@ public class OSMModel {
     private Map<Type, List<Drawable>> enumMap;
     private Bound mapBound;
     private ArrayList<Address> addresses;
+    private Pin pin;
 
     private ArrayList<Runnable> observers = new ArrayList<>();
 
@@ -29,6 +30,11 @@ public class OSMModel {
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
     public Bound getMapBound(){return mapBound;}
     public ArrayList<Address> getAddresses(){return addresses;}
+    public Pin getPin(){return pin;}
+
+    public void setPin(double x, double y){
+        pin = new Pin(x, y, 1);
+    }
 
     public List<Drawable> getDrawablesOfType(Type type) {
         if (enumMap.containsKey(type)) return enumMap.get(type);

@@ -52,6 +52,10 @@ public class MapPainter {
         paintDrawables(model.getDrawablesOfType(Type.HIGHWAY), false, pixelWidth);
 
         paintDrawables(model.getDrawablesOfType(Type.BUILDING), true, pixelWidth);
+
+        gc.setStroke(Type.getColor(Type.PIN));
+        gc.setFill(Type.getColor(Type.PIN));
+        if(model.getPin() != null) model.getPin().draw(gc, pixelWidth);
     }
 
     private void paintDrawables(List<Drawable> drawables, boolean fill, double lineWidth){
