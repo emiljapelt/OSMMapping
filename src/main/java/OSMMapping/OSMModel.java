@@ -1,7 +1,5 @@
 package OSMMapping;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,6 @@ public class OSMModel {
             observer.run();
         }
     }
-
 }
 
 //TODO Make addresses sorted, for better/faster searching
