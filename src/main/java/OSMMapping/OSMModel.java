@@ -10,7 +10,7 @@ public class OSMModel {
     private ArrayList<Drawable> coastlines;
     private Map<Type, List<Drawable>> enumMap;
     private Bound mapBound;
-    private ArrayList<Address> addresses;
+    private SortedAddressArrayList addresses;
     private Pin pin;
 
     private ArrayList<Runnable> observers = new ArrayList<>();
@@ -29,7 +29,7 @@ public class OSMModel {
 
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
     public Bound getMapBound(){return mapBound;}
-    public ArrayList<Address> getAddresses(){return addresses;}
+    public SortedAddressArrayList getAddresses(){return addresses;}
     public Pin getPin(){return pin;}
 
     public void setPin(double x, double y){

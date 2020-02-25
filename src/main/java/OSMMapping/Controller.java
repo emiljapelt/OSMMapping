@@ -31,12 +31,13 @@ public class Controller {
         main.getInput().textProperty().addListener(e -> {
             main.getSuggestions().getChildren().clear();
             if(!(main.getInput().getText().equals(""))){
-                for (Address address : model.getAddresses()) {
-                    String addressText = address.toString();
-                    if(addressText.toLowerCase().startsWith(main.getInput().getText().toLowerCase())){
-                        Label label = new Label(addressText);
+                int suggestionPoint = model.getAddresses().getSuggestions(main.getInput().getText());
+                for (int i = suggestionPoint; i < suggestionPoint+6; i++) {
+                    if(model.getAddresses().getAddressByIndex(i).toString().toLowerCase().startsWith(main.getInput().getText().toLowerCase())) {
+                        Label label = new Label(model.getAddresses().getAddressByIndex(i).toString());
+                        int finalI = i;
                         label.setOnMouseClicked(a -> {
-                            main.getInput().setText(addressText);
+                            main.getInput().setText(model.getAddresses().getAddressByIndex(finalI).toString());
                             main.getSuggestions().getChildren().clear();
                         });
                         main.getSuggestions().getChildren().add(label);
@@ -47,12 +48,11 @@ public class Controller {
 
         main.getInput().setOnAction(e -> {
             String searchedAddress = main.getInput().getText();
-            for(Address a : model.getAddresses()){
-                if(a.toString().equals(searchedAddress)){
-                    main.zoomToNode(a.getLocation());
-                    model.setPin(a.getLocation().getLon(), a.getLocation().getLat());
-                    break;
-                }
+            Address found = model.getAddresses().getAddressByName(searchedAddress);
+            System.out.println(found);
+            if(found != null){
+                main.zoomToNode(found.getLocation());
+                model.setPin(found.getLocation().getLon(), found.getLocation().getLat());
             }
             main.paintMap();
         });

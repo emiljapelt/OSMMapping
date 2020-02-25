@@ -10,7 +10,7 @@ public class SortedArrayList<T extends LongSupplier> implements Iterable<T>{
     private boolean isSorted;
 
     public SortedArrayList() {
-        list = new ArrayList();
+        list = new ArrayList<T>();
         isSorted = false;
     }
 

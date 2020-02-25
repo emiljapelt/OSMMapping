@@ -1,6 +1,6 @@
 package OSMMapping;
 
-public class Address {
+public class Address implements Comparable<Address>{
     private Node location;
 
     private String city;
@@ -16,11 +16,21 @@ public class Address {
         house = info[3];
     }
 
+    @Override
     public String toString(){
         return street + " " + house + ", " + postcode + " " + city;
     }
 
     public Node getLocation(){
         return location;
+    }
+
+    public int compareTo(Address that){
+        String comparator = that.toString();
+        return compareToString(comparator);
+    }
+
+    public int compareToString(String comparator){
+        return this.toString().toLowerCase().compareTo(comparator.toLowerCase());
     }
 }

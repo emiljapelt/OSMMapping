@@ -15,7 +15,7 @@ public class OSMReader {
     private ArrayList<Drawable> coastlines;
 
     private Map<Type, List<Drawable>> enumMap;
-    private ArrayList<Address> addresses;
+    private SortedAddressArrayList addresses;
 
     private SortedArrayList<Node> tempNodes;
     private SortedArrayList<Way> tempWays;
@@ -29,12 +29,12 @@ public class OSMReader {
 
     private long currentID;
 
-    Type type = Type.UNKNOWN;
+    private Type type = Type.UNKNOWN;
 
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
     public Bound getTempBound(){return tempBound;}
     public Map<Type, List<Drawable>> getEnumMap(){return enumMap;}
-    public ArrayList<Address> getAddresses(){return addresses;}
+    public SortedAddressArrayList getAddresses(){return addresses;}
 
     public OSMReader(InputStream inputStream){
 
@@ -44,7 +44,7 @@ public class OSMReader {
         tempCoastlines = new HashMap<>();
 
         enumMap = new HashMap<>();
-        addresses = new ArrayList<>();
+        addresses = new SortedAddressArrayList();
         String[] addressInfo = new String[4];
 
         coastlines = new ArrayList<>();
