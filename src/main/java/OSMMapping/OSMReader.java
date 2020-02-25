@@ -102,6 +102,7 @@ public class OSMReader {
                                             addresses.add(new Address(tempNodes.get(currentID), addressInfo));
                                         }
                                         break;
+                                    case "postal_code":
                                     case "addr:postcode":
                                         addressInfo[1] = v;
                                         if (addressInfoIsFull(addressInfo) && wayHolder == null){
