@@ -3,11 +3,9 @@ package OSMMapping;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -43,7 +41,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("isle-of-man-latest.osm");
+        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("bornholm.osm");
 
         mapCanvas = new Canvas(windowSizeX, windowSizeY);
         gc = mapCanvas.getGraphicsContext2D();

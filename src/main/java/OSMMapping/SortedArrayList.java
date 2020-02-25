@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.function.LongSupplier;
 
 public class SortedArrayList<T extends LongSupplier> implements Iterable<T>{
-    ArrayList<T> list;
-    boolean isSorted;
+    private ArrayList<T> list;
+    private boolean isSorted;
 
     public SortedArrayList() {
         list = new ArrayList();

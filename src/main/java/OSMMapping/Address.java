@@ -1,12 +1,12 @@
 package OSMMapping;
 
 public class Address {
-    Node location;
+    private Node location;
 
-    String city;
-    String postcode;
-    String street;
-    String house;
+    private String city;
+    private String postcode;
+    private String street;
+    private String house;
 
     public Address(Node location, String[] info){
         this.location = location;
