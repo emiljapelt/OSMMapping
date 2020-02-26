@@ -33,7 +33,7 @@ public class Controller {
             main.getSuggestions().getChildren().clear();
             if(!(main.getInput().getText().equals(""))){
                 int suggestionPoint = model.getAddresses().getSuggestions(main.getInput().getText());
-                for (int i = suggestionPoint; i < suggestionPoint+6; i++) {
+                for (int i = suggestionPoint; i < suggestionPoint+6 && i < model.getAddresses().getAddressCount(); i++) {
                     if(model.getAddresses().getAddressByIndex(i).toString().toLowerCase().startsWith(main.getInput().getText().toLowerCase())) {
                         Label label = new Label(model.getAddresses().getAddressByIndex(i).toString());
                         int finalI = i;

@@ -17,6 +17,8 @@ public class SortedAddressArrayList implements Iterable<Address> {
         list.add(address);
     }
 
+    public int getAddressCount(){return list.size();}
+
     public Address getAddressByIndex(int index){
         if (!isSorted){
             Collections.sort(list);
