@@ -1,6 +1,7 @@
 package OSMMapping;
 
 import javafx.geometry.Point2D;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
 public class Controller {
@@ -49,12 +50,17 @@ public class Controller {
         main.getInput().setOnAction(e -> {
             String searchedAddress = main.getInput().getText();
             Address found = model.getAddresses().getAddressByName(searchedAddress);
-            System.out.println(found);
             if(found != null){
                 main.zoomToNode(found.getLocation());
                 model.setPin(found.getLocation().getLon(), found.getLocation().getLat());
+                main.paintMap();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Address search failure");
+                alert.setHeaderText("Address: [" + searchedAddress + "] not found.");
+                alert.setContentText("Try another address.");
+                alert.showAndWait();
             }
-            main.paintMap();
         });
     }
 }
