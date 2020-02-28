@@ -31,6 +31,9 @@ public class MapPainter {
         gc.fillRect(0, 0, main.getMapCanvas().getWidth(), main.getMapCanvas().getHeight());
         gc.setTransform(transform);
 
+        double pixelWidth = 1/Math.sqrt(Math.abs(transform.determinant()));
+        gc.setLineWidth(pixelWidth);
+
         model.getMapBound().draw(gc, transform.getMxx());
         gc.setFill(Type.getColor(Type.COASTLINE));
         for(Drawable coastline : coastlines){
@@ -38,8 +41,6 @@ public class MapPainter {
             gc.fill();
         }
 
-        double pixelWidth = 1/Math.sqrt(Math.abs(transform.determinant()));
-        gc.setLineWidth(pixelWidth);
         gc.setFillRule(FillRule.EVEN_ODD);
 
         paintDrawables(model.getDrawablesOfType(Type.BEACH), true, pixelWidth);
