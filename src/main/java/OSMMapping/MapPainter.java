@@ -56,6 +56,9 @@ public class MapPainter {
         gc.setStroke(Type.getColor(Type.PIN));
         gc.setFill(Type.getColor(Type.PIN));
         if(model.getPin() != null) model.getPin().draw(gc, pixelWidth);
+
+        model.getScaleBar().updateScaleBar(main);
+        model.getScaleBar().draw(gc,pixelWidth);
     }
 
     private void paintDrawables(List<Drawable> drawables, boolean fill, double lineWidth){

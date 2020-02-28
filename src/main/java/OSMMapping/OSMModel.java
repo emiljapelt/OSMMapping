@@ -12,6 +12,7 @@ public class OSMModel {
     private Bound mapBound;
     private SortedAddressArrayList addresses;
     private Pin pin;
+    private ScaleBar scaleBar;
 
     private ArrayList<Runnable> observers = new ArrayList<>();
 
@@ -25,12 +26,15 @@ public class OSMModel {
         mapBound = reader.getTempBound();
         enumMap = reader.getEnumMap();
         addresses = reader.getAddresses();
+
+        scaleBar = new ScaleBar();
     }
 
     public ArrayList<Drawable> getCoastlines(){return coastlines;}
     public Bound getMapBound(){return mapBound;}
     public SortedAddressArrayList getAddresses(){return addresses;}
     public Pin getPin(){return pin;}
+    public ScaleBar getScaleBar(){return scaleBar;}
 
     public void setPin(double x, double y){
         pin = new Pin(x, y, 1);
